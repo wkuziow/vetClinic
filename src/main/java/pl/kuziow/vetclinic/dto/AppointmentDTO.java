@@ -1,33 +1,21 @@
-package pl.kuziow.vetclinic.entity;
+package pl.kuziow.vetclinic.dto;
+
+import pl.kuziow.vetclinic.entity.CustomerEntity;
+import pl.kuziow.vetclinic.entity.DoctorEntity;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
-@Entity(name = "appointment")
-public class AppointmentEntity implements Serializable {
+public class AppointmentDTO implements Serializable {
 
-    private static final long serialVersionUID = -3213046536158769717L;
+    private static final long serialVersionUID = -5372110032482593570L;
 
-    @Id
-    @GeneratedValue
     private long id;
-
-    @Column(nullable = false)
     private String appointmentId;
-
-    @Column(nullable = false)
     private LocalDateTime localDateTime;
-
-    @ManyToOne
-    @JoinColumn(name = "customers_id")
-    private CustomerEntity customer;
-
-    @ManyToOne
-    @JoinColumn(name = "doctors_id")
-    private DoctorEntity doctor;
+    private CustomerDTO customer;
+    private DoctorDTO doctor;
 
     public long getId() {
         return id;
@@ -53,19 +41,19 @@ public class AppointmentEntity implements Serializable {
         this.localDateTime = localDateTime;
     }
 
-    public CustomerEntity getCustomer() {
+    public CustomerDTO getCustomer() {
         return customer;
     }
 
-    public void setCustomer(CustomerEntity customer) {
+    public void setCustomer(CustomerDTO customer) {
         this.customer = customer;
     }
 
-    public DoctorEntity getDoctor() {
+    public DoctorDTO getDoctor() {
         return doctor;
     }
 
-    public void setDoctor(DoctorEntity doctor) {
+    public void setDoctor(DoctorDTO doctor) {
         this.doctor = doctor;
     }
 }

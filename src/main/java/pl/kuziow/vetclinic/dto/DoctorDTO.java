@@ -1,28 +1,19 @@
-package pl.kuziow.vetclinic.entity;
+package pl.kuziow.vetclinic.dto;
+
+import pl.kuziow.vetclinic.entity.AppointmentEntity;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
-@Entity(name = "doctors")
-public class DoctorEntity implements Serializable {
+public class DoctorDTO implements Serializable {
 
-    private static final long serialVersionUID = -1688079151856460023L;
+    private static final long serialVersionUID = 2082766996481490236L;
 
-    @Id
-    @GeneratedValue
     private long id;
-
-    @Column(nullable = false)
     private String doctorId;
-
-    @Column(nullable = false, length = 50)
     private String name;
-
-    @Column(nullable = false, length = 50)
     private String lastName;
-
-    @OneToMany(mappedBy = "doctor", cascade = CascadeType.PERSIST)
     private List<AppointmentEntity> appointments;
 
     public long getId() {
@@ -55,5 +46,13 @@ public class DoctorEntity implements Serializable {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public List<AppointmentEntity> getAppointments() {
+        return appointments;
+    }
+
+    public void setAppointments(List<AppointmentEntity> appointments) {
+        this.appointments = appointments;
     }
 }

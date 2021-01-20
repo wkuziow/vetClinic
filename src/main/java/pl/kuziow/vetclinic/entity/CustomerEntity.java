@@ -31,7 +31,7 @@ public class CustomerEntity implements Serializable {
     @Column(nullable = false, length = 150)
     private String email;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.PERSIST)
     private List<AppointmentEntity> appointments;
 
     //password, pet detail, address
