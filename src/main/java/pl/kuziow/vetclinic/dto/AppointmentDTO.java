@@ -1,9 +1,5 @@
 package pl.kuziow.vetclinic.dto;
 
-import pl.kuziow.vetclinic.entity.CustomerEntity;
-import pl.kuziow.vetclinic.entity.DoctorEntity;
-
-import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 

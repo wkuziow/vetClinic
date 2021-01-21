@@ -4,7 +4,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.kuziow.vetclinic.dto.AppointmentDTO;
-import pl.kuziow.vetclinic.dto.CustomerDTO;
 import pl.kuziow.vetclinic.entity.AppointmentEntity;
 import pl.kuziow.vetclinic.entity.CustomerEntity;
 import pl.kuziow.vetclinic.entity.DoctorEntity;
@@ -12,10 +11,12 @@ import pl.kuziow.vetclinic.repositories.AppointmentRepository;
 import pl.kuziow.vetclinic.repositories.CustomerRepository;
 import pl.kuziow.vetclinic.repositories.DoctorRepository;
 import pl.kuziow.vetclinic.service.AppointmentService;
+import pl.kuziow.vetclinic.service.ErrorService;
 import pl.kuziow.vetclinic.utils.Utils;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,21 +33,26 @@ public class AppointmentServiceImpl implements AppointmentService {
     AppointmentRepository appointmentRepository;
 
     @Autowired
+    ErrorService errorService;
+
+    @Autowired
     Utils utils;
 
 
     @Override
-    public AppointmentDTO createAppointment(AppointmentDTO appointmentDTO) {
+    public AppointmentDTO createAppointment(AppointmentDTO appointmentDTO) throws Exception{
 
-        //TODO weryfikacja czy pola nie są puste
         String customerEmail = appointmentDTO.getCustomer().getEmail();
         CustomerEntity customerEntity = customerRepository.findByEmail(customerEmail);
-        //TODO weryfikacja ID i PIN
-        //TODO weryfikacja czy customer istnieje
+
+        errorService.customerExists(customerEntity);
+
+        errorService.verifyIDAndPIN(customerEntity, appointmentDTO);
+
         String doctorId = appointmentDTO.getDoctor().getDoctorId();
         DoctorEntity doctorEntity = doctorRepository.findByDoctorId(doctorId);
 
-        //TODO weryfikacja czy doktor istnieje
+        errorService.doctorExists(doctorEntity);
 
         ModelMapper modelMapper = new ModelMapper();
 
@@ -58,6 +64,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         appointmentEntity.setAppointmentId(publicAppointmentId);
 
+        errorService.appointmentExistsBeforeSaving(appointmentEntity);
+
         AppointmentEntity storedAppointemnt = appointmentRepository.save(appointmentEntity);
 
         AppointmentDTO returnValue = modelMapper.map(storedAppointemnt, AppointmentDTO.class);
@@ -68,8 +76,8 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public void delete(String appoitmentId) {
         AppointmentEntity appointmentEntity = appointmentRepository.findByAppointmentId(appoitmentId);
-        //TODO
-        //if (userEntity == null) throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+
+        errorService.appointmentExists(appointmentEntity);
         appointmentRepository.delete(appointmentEntity);
 
     }
@@ -84,13 +92,13 @@ public class AppointmentServiceImpl implements AppointmentService {
         }
         List<AppointmentEntity> appointmentEntities = appointmentRepository.findAllByDoctor(doctorEntity);
         LocalDate localDate = LocalDate.parse(date);
-        appointmentEntities.stream()
+        List<AppointmentEntity> finalAppointmentEntities = appointmentEntities.stream()
                 .filter(d -> d.getLocalDateTime().toLocalDate().equals(localDate))
+                .sorted(Comparator.comparing(AppointmentEntity::getLocalDateTime))
                 .collect(Collectors.toList());
-        for (AppointmentEntity appointmentEntity : appointmentEntities) {
+        for (AppointmentEntity appointmentEntity : finalAppointmentEntities) {
             returnValue.add(modelMapper.map(appointmentEntity, AppointmentDTO.class));
         }
-
         return returnValue;
     }
 }

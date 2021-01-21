@@ -1,8 +1,5 @@
 package pl.kuziow.vetclinic.response;
 
-import pl.kuziow.vetclinic.request.CustomerRequestModel;
-import pl.kuziow.vetclinic.request.DoctorRequestModel;
-
 import java.time.LocalDateTime;
 
 public class AppointmentREST {

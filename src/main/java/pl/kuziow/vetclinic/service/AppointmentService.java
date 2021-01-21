@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface AppointmentService {
 
-    AppointmentDTO createAppointment(AppointmentDTO appointmentDTO);
+    AppointmentDTO createAppointment(AppointmentDTO appointmentDTO) throws Exception;
 
     void delete(String appoitmentId);
 

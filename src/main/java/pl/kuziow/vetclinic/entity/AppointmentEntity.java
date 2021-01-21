@@ -2,9 +2,7 @@ package pl.kuziow.vetclinic.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @Entity(name = "appointment")
 public class AppointmentEntity implements Serializable {

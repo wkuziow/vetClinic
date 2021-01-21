@@ -2,7 +2,6 @@ package pl.kuziow.vetclinic.dto;
 
 import pl.kuziow.vetclinic.entity.AppointmentEntity;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
